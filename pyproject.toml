@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tinytrie"
+version = "0.1.0a6"
+description = "A minimal type-safe trie (prefix tree) implementation in Python."
+readme = "README.md"
+requires-python = ">=2"
+license = "MIT"
+authors = [
+  { name="Jifeng Wu", email="jifengwu2k@gmail.com" }
+]
+keywords = ["trie", "prefix tree", "data structure", "python"]
+classifiers = [
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "typing; python_version < '3.5'"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/jifengwu2k/tinytrie"
+"Bug Tracker" = "https://github.com/jifengwu2k/tinytrie/issues"
