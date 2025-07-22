@@ -6,6 +6,7 @@ from typing import TypeVar, Generic, Dict, Optional, Sequence, List, Tuple, Iter
 K = TypeVar("K")
 V = TypeVar("V")
 
+
 class TrieNode(Generic[K, V]):
     """A node in the trie structure.
 
@@ -16,15 +17,14 @@ class TrieNode(Generic[K, V]):
     __slots__ = ("children", "is_end", "value")
 
     def __init__(self):
-        self.children = {} # type: Dict[K, TrieNode[K, V]]
+        self.children = {}  # type: Dict[K, TrieNode[K, V]]
 
-        self.is_end = False # type: bool
-        self.value = None # type: Optional[V]
+        self.is_end = False  # type: bool
+        self.value = None  # type: Optional[V]
 
 
-def search(root, sequence, index=0):
-    # type: (TrieNode[K, V], Sequence[K], int) -> Optional[TrieNode[K, V]]
-    """Search for a sequence in the trie.
+def get_subtrie_root(root, sequence, index=0):
+    """Get the root of a subtrie.
 
     Args:
         root: Root node of the trie
@@ -32,20 +32,37 @@ def search(root, sequence, index=0):
         index: Current index in sequence (used internally for recursion)
 
     Returns:
-        The terminal node if found, None otherwise
+        The node if found, None otherwise
 
     Time complexity: O(n) where n is length of sequence"""
     if index >= len(sequence):
-        if root.is_end:
-            return root
-        else:
-            return None
+        return root
     else:
         key = sequence[index]
         if key not in root.children:
             return None
         else:
-            return search(root.children[key], sequence, index + 1)
+            return get_subtrie_root(root.children[key], sequence, index + 1)
+
+
+def search(root, sequence):
+    # type: (TrieNode[K, V], Sequence[K]) -> Optional[TrieNode[K, V]]
+    """Search for a sequence stored in the trie.
+
+    Args:
+        root: Root node of the trie
+        sequence: Sequence of keys to search for
+
+    Returns:
+        The terminal node if found, None otherwise
+
+    Time complexity: O(n) where n is length of sequence"""
+    subtrie = get_subtrie_root(root, sequence)
+    if subtrie is not None:
+        # Is the sequence stored in the tree?
+        if not subtrie.is_end:
+            return None
+    return subtrie
 
 
 def update(root, sequence, value=None, index=0):
@@ -144,7 +161,7 @@ def collect_sequences(root, prefix=None):
     """Generate all sequences stored in the trie.
     Args:
         root: Root node of the trie
-        prefix: Current prefix (used internally for recursion)
+        prefix: A prefix to append to the generated sequences
 
     Yields:
         Tuples of (sequence, terminal node) for all stored sequences
@@ -154,7 +171,7 @@ def collect_sequences(root, prefix=None):
         prefix = []
 
     if root.is_end:
-        yield list(prefix), root
+        yield list(prefix), root  # We don't user `list`'s `copy` method because it is not available on Python 2
 
     for key, child in root.children.items():
         prefix.append(key)
