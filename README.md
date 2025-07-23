@@ -96,6 +96,18 @@ prefix, _ = longest_common_prefix(trajectory_trie)
 assert prefix == [(1, 2)]
 ```
 
+## API Reference
+
+| Function                                                                                                                | Purpose | Time Complexity |
+|-------------------------------------------------------------------------------------------------------------------------| --- | --- |
+| `traverse(root: TrieNode[K, V], path: Iterable[K]) -> Iterator[Tuple[Optional[TrieNode[K, V]], K]]`                     | Yields nodes and keys along a path of keys (even if it diverges) | O(n) |
+| `get_subtrie_root(root: TrieNode[K, V], path: Iterable[K]) -> Optional[TrieNode[K, V]]`                                 | Gets the root node of a subtrie at the end of a path of keys if it exists | O(n) |
+| `search(root: TrieNode[K, V], sequence: Iterable[K]) -> Optional[TrieNode[K, V]]`                                       | Returns terminal node if sequence is stored in the trie | O(n) |
+| `update(root: TrieNode[K, V], sequence: Iterable[K], value: Optional[V] = None) -> TrieNode[K, V]`                      | Inserts or updates a sequence and sets its value | O(n) |
+| `delete(root: TrieNode[K, V], sequence: Sequence[K]) -> bool`                                                           | Removes a sequence and prunes dead nodes | O(n) |
+| `longest_common_prefix(root: TrieNode[K, V]) -> Tuple[Sequence[K], TrieNode[K, V]]`                                     | Finds the longest common prefix of all sequences and its terminal node | O(m) |
+| `collect_sequences(root: TrieNode[K, V], prefix: Optional[List[K]] = None) -> Iterator[Tuple[List[K], TrieNode[K, V]]]` | Yields all stored sequences and their terminal nodes | O(n) per sequence |
+
 ## Contributing
 
 Contributions are welcome! Please submit pull requests or open issues on the GitHub repository.
