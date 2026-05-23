@@ -22,9 +22,17 @@ class TrieNode(Generic[K, V]):
         self.is_end = False  # type: bool
         self.value = None  # type: Optional[V]
 
+    def _create_node(self):
+        # type: () -> TrieNode[K, V]
+        """Create a new node instance. Override in subclasses to customize node creation."""
+        return self.__class__()
+
+
+N = TypeVar("N", bound=TrieNode)
+
 
 def traverse(root, path):
-    # type: (TrieNode[K, V], Iterable[K]) -> Iterator[Tuple[Optional[TrieNode[K, V]], K]]
+    # type: (N, Iterable[K]) -> Iterator[Tuple[Optional[N], K]]
     """Traverse the trie following a path of keys, yielding each node and key.
 
     Args:
@@ -40,7 +48,7 @@ def traverse(root, path):
         from the trie structure (in which case subsequent nodes will be None).
 
     Time complexity: O(n) where n is length of path"""
-    node_or_none = root  # type: Optional[TrieNode[K, V]]
+    node_or_none = root  # type: Optional[N]
 
     for key in path:
         if node_or_none is not None:
@@ -49,7 +57,7 @@ def traverse(root, path):
 
 
 def get_subtrie_root(root, path):
-    # type: (TrieNode[K, V], Iterable[K]) -> Optional[TrieNode[K, V]]
+    # type: (N, Iterable[K]) -> Optional[N]
     """Get the root node of a subtrie at the end of a path of keys.
 
     Args:
@@ -65,7 +73,7 @@ def get_subtrie_root(root, path):
         it only verifies the path exists.
 
     Time complexity: O(n) where n is length of path"""
-    subtrie_root = root  # type: TrieNode[K, V]
+    subtrie_root = root  # type: N
 
     for nullable_subtrie_root, _ in traverse(root, path):
         if nullable_subtrie_root is not None:
@@ -77,7 +85,7 @@ def get_subtrie_root(root, path):
 
 
 def search(root, sequence):
-    # type: (TrieNode[K, V], Iterable[K]) -> Optional[TrieNode[K, V]]
+    # type: (N, Iterable[K]) -> Optional[N]
     """Search for a sequence stored in the trie.
 
     Args:
@@ -96,7 +104,7 @@ def search(root, sequence):
 
 
 def update(root, sequence, value=None):
-    # type: (TrieNode[K, V], Iterable[K], Optional[V]) -> TrieNode[K, V]
+    # type: (N, Iterable[K], Optional[V]) -> N
     """Update the value of a sequence in the trie. Inserts the sequence into the trie if not already present.
 
     Args:
@@ -108,12 +116,12 @@ def update(root, sequence, value=None):
         The terminal node for the sequence
 
     Time complexity: O(n) where n is length of sequence"""
-    node = root  # type: TrieNode[K, V]
+    node = root  # type: N
     for key in sequence:
         if key in node.children:
             child = node.children[key]
         else:
-            child = TrieNode()
+            child = root._create_node()
             node.children[key] = child
             child.parent = node
         node = child
@@ -140,7 +148,7 @@ def delete_keys_where_value(dictionary, predicate):
 
 
 def delete(root, sequence):
-    # type: (TrieNode[K, V], Sequence[K]) -> bool
+    # type: (N, Sequence[K]) -> bool
     """Delete a sequence from the trie.
 
     Args:
@@ -183,7 +191,7 @@ def delete(root, sequence):
 
 
 def longest_common_prefix(root):
-    # type: (TrieNode[K, V]) -> Tuple[Sequence[K], TrieNode[K, V]]
+    # type: (N) -> Tuple[Sequence[K], N]
     """Find the longest common prefix of all sequences in the trie and its terminal node.
 
     Args:
@@ -210,7 +218,7 @@ def longest_common_prefix(root):
 
 
 def collect_sequences(root, prefix=None):
-    # type: (TrieNode[K, V], Optional[List[K]]) -> Iterator[Tuple[List[K], TrieNode[K, V]]]
+    # type: (N, Optional[List[K]]) -> Iterator[Tuple[List[K], N]]
     """Generate all sequences stored in the trie and their terminal nodes.
     Args:
         root: Root node of the trie

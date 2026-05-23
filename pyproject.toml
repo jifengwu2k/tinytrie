@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tinytrie"
-version = "0.1.0a6"
+version = "0.1.0a7"
 description = "A minimal type-safe trie (prefix tree) implementation in Python."
 readme = "README.md"
 requires-python = ">=2"
